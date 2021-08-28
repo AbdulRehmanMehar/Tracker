@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electron Auto Update and Deploy</title>
+</head>
+<body>
+    Hi, It's version <span id="versionInfo"></span>
+
+
+    <div id="updateNotifier" style="display: none;">
+        <p id="updateMessage"></p>
+        <button id="closeNotificationBtn">
+          Not interested!
+        </button> &nbsp; &nbsp;
+        <button id="executeUpdateBtn" style="display: none;">
+          Update Now
+        </button>
+    </div>
+    <script>
+        const { ipcRenderer } = require('electron');
+        const version = document.getElementById('versionInfo');
+        const updateMessage = document.getElementById('updateMessage');
+        const updateNotifier = document.getElementById('updateNotifier');
+        const executeUpdateBtn = document.getElementById('executeUpdateBtn');
+        const closeNotificationBtn = document.getElementById('closeNotificationBtn');
+
+
+
+        ipcRenderer.send('versionInfo');
+        ipcRenderer.on('versionInfo', (event, arg) => {
+            ipcRenderer.removeAllListeners('versionInfo');
+            version.innerText = arg.version;
+        });
+
+        ipcRenderer.on('gotAnUpdate', (event, arg) => {
+            ipcRenderer.removeAllListeners('gotAnUpdate');
+            updateMessage.innerText = 'A new update is available. Downloading now...';
+            updateNotifier.style.display = 'block';
+        });
+
+        ipcRenderer.on('downloadedTheUpdate', (event, arg) => {
+            ipcRenderer.removeAllListeners('downloadedTheUpdate');
+            updateNotifier.style.display = 'block';
+            executeUpdateBtn.style.display = 'block';
+        });
+
+        executeUpdateBtn.addEventListener('click', (event) => {
+            ipcRenderer.send('restartToUpdate');
+        });
+
+        closeNotificationBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            updateNotifier.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
