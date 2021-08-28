@@ -1,0 +1,25 @@
+{
+  "name": "electron-auto-updater",
+  "version": "1.0.0",
+  "description": "Electron Application Auto Update and Deploy",
+  "main": "app.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder build --win --publish never",
+    "deploy": "electron-builder build --win --publish always"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AbdulRehmanMehar/electron-auto-update-deploy.git"
+  },
+  "author": "Abdul Rehman",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "electron": "^13.2.3",
+    "electron-builder": "^22.11.7"
+  },
+  "dependencies": {
+    "electron-updater": "^4.3.9"
+  }
+}
