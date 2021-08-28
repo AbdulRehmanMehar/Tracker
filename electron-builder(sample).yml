@@ -1,0 +1,4 @@
+appId: com.github.AbdulRehmanMehar.ElectronAutoUpdateAndDeploy
+publish:
+  provider: github
+  token: [YOUR GITHUB ACCESS TOKEN]
