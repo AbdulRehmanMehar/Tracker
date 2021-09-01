@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 
+console.log(process.env.GH_TOKEN);
+
 let mainWindow;
 
 function createWindow () {
@@ -42,7 +44,13 @@ ipcMain.on('versionInfo', (event) => {
   event.sender.send('versionInfo', { version: app.getVersion() });
 });
 
-
+autoUpdater.setFeedURL({
+  provider: 'github',
+  owner: 'AbdulRehmanMehar',
+  repo: 'electron-auto-update-deploy',
+  private: true,
+  token: process.env.GH_TOKEN
+})
 
 autoUpdater.on('update-available', () => {
     mainWindow.webContents.send('gotAnUpdate');
@@ -54,3 +62,6 @@ autoUpdater.on('update-downloaded', () => {
 ipcMain.on('restartToUpdate', () => {
     autoUpdater.quitAndInstall();
 });
+
+exports.app = app;
+exports.mainWindow = mainWindow;
