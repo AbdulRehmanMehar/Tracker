@@ -4,9 +4,8 @@ const v8 = require('v8');
 
 v8.setFlagsFromString('--no-lazy');
 
-if (!fs.existsSync('./app.jsc')) {
-
-  bytenode.compileFile('./app.js', './app.jsc');
+if (!fs.existsSync(__dirname + '/app.jsc')) {
+  bytenode.compileFile(__dirname + '/app.js', __dirname + '/app.jsc');
 }
 
-require('./app.jsc');
+require(__dirname + '/app.jsc');
