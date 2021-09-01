@@ -49,7 +49,8 @@ autoUpdater.setFeedURL({
   owner: 'AbdulRehmanMehar',
   repo: 'electron-auto-update-deploy',
   private: true,
-  token: process.env.GH_TOKEN
+  token: process.env.GH_TOKEN,
+  releaseType: 'release'
 })
 
 autoUpdater.on('update-available', () => {
