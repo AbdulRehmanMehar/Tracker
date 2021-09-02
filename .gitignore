@@ -3,3 +3,4 @@ node_modules
 electron-builder.yml
 electron-builder.env
 *.jsc
+variables.js
