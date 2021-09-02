@@ -12,6 +12,7 @@
     "appId": "com.example.electron-boilerplate",
     "files": [
       "index.html",
+      "**.jsc",
       "!**.js",
       "main.js",
       "app.jsc",
