@@ -1,10 +1,45 @@
+const fs = require('fs');
+const bytenode = require('bytenode');
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
+const { isPackaged } = require('electron-is-packaged');
 
-console.log(process.env.GH_TOKEN);
+if (!isPackaged && fs.existsSync(__dirname + '/variables.js') && fs.existsSync(__dirname + '/variables.jsc')) {
+  fs.unlinkSync(__dirname + '/variables.js');
+  fs.unlinkSync(__dirname + '/variables.jsc');
+}
+
+if (!fs.existsSync(__dirname + '/variables.jsc')) {
+  fs.writeFileSync(__dirname + '/variables.js', `
+
+    let variables = {
+      GH_TOKEN: '${process.env.GH_TOKEN}'
+    }
+    exports.vars = variables;
+  `);
+
+  bytenode.compileFile({
+    filename: __dirname + '/variables.js',
+    output: __dirname + '/variables.jsc',
+  });
+}
+
+const { GH_TOKEN } = require(__dirname + '/variables.jsc').vars
+
+
+autoUpdater.setFeedURL({
+  provider: 'github',
+  owner: 'AbdulRehmanMehar',
+  repo: 'electron-auto-update-deploy',
+  private: true,
+  token: GH_TOKEN,
+  releaseType: 'release'
+})
+
+
+
 
 let mainWindow;
-
 function createWindow () {
   mainWindow = new BrowserWindow({
     width: 800,
@@ -17,11 +52,14 @@ function createWindow () {
   mainWindow.loadFile('index.html');
   mainWindow.once('ready-to-show', () => {
     autoUpdater.checkForUpdatesAndNotify();
+    mainWindow.webContents.send('ghtoken', GH_TOKEN);
+    mainWindow.webContents.send('feedURL', autoUpdater.getFeedURL())
+    console.log("Sent the token");
   });
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
-  
+
 }
 
 app.on('ready', () => {
@@ -44,14 +82,7 @@ ipcMain.on('versionInfo', (event) => {
   event.sender.send('versionInfo', { version: app.getVersion() });
 });
 
-autoUpdater.setFeedURL({
-  provider: 'github',
-  owner: 'AbdulRehmanMehar',
-  repo: 'electron-auto-update-deploy',
-  private: true,
-  token: process.env.GH_TOKEN,
-  releaseType: 'release'
-})
+
 
 autoUpdater.on('update-available', () => {
     mainWindow.webContents.send('gotAnUpdate');
