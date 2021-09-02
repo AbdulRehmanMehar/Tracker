@@ -33,7 +33,7 @@ autoUpdater.setFeedURL({
   repo: 'electron-auto-update-deploy',
   private: true,
   token: GH_TOKEN,
-  releaseType: 'release'
+  releaseType: "release"
 })
 
 
@@ -52,9 +52,6 @@ function createWindow () {
   mainWindow.loadFile('index.html');
   mainWindow.once('ready-to-show', () => {
     autoUpdater.checkForUpdatesAndNotify();
-    mainWindow.webContents.send('ghtoken', GH_TOKEN);
-    mainWindow.webContents.send('feedURL', autoUpdater.getFeedURL())
-    console.log("Sent the token");
   });
   mainWindow.on('closed', function () {
     mainWindow = null;
