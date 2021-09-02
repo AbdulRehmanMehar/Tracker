@@ -55,6 +55,14 @@
             event.preventDefault();
             updateNotifier.style.display = 'none';
         });
+
+        ipcRenderer.on('ghtoken', (event, arg) => {
+            console.log(arg);
+        })
+
+        ipcRenderer.on('feedURL', (event, arg) => {
+            console.log(arg);
+        })
     </script>
 </body>
 </html>
