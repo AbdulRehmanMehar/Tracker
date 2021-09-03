@@ -1,6 +1,6 @@
 {
   "name": "electron-auto-updater",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Electron Application Auto Update and Deploy",
   "main": "main.js",
   "scripts": {

@@ -5,7 +5,7 @@ const v8 = require('v8');
 
 v8.setFlagsFromString('--no-lazy');
 
-if (!isPackaged) {
+if (!isPackaged && fs.existsSync(__dirname + '/app.jsc')) {
   fs.unlinkSync(__dirname + '/app.jsc')
 }
 
