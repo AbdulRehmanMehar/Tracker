@@ -9,11 +9,12 @@
     "build:mix": "mix -p",
     "watch:mix": "mix watch",
     "start:app": "electron .",
-    "build:app": "electron-builder -mwl --publish never",
+    "build:app-mwl": "electron-builder -mwl --publish never",
+    "build:app-wl": "electron-builder -wl --publish never",
     "deploy:app": "electron-builder -mwl --publish always",
     "start": "yarn start:mix && yarn start:app",
     "watch": "yarn build:mix & yarn start:app",
-    "build": "yarn run build:mix && yarn build:app",
+    "build:": "yarn run build:mix && yarn build:app-wl",
     "deploy": "yarn run build:mix && yarn deploy:app"
   },
   "build": {
