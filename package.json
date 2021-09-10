@@ -14,7 +14,7 @@
     "deploy:app": "electron-builder -mwl --publish always",
     "start": "yarn start:mix && yarn start:app",
     "watch": "yarn build:mix & yarn start:app",
-    "build:": "yarn run build:mix && yarn build:app-wl",
+    "build": "yarn run build:mix && yarn build:app-wl",
     "deploy": "yarn run build:mix && yarn deploy:app"
   },
   "build": {
