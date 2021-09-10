@@ -1,0 +1,44 @@
+stages:
+  - pack
+  - deploy
+
+####################
+# PACK
+####################
+
+pack:
+  stage: pack
+  only:
+    - tags
+  image: electronuserland/electron-builder:wine
+  before_script:
+    - mkdir .zepto
+    - git clone https://gitlab.com/ammar.nero/zepto-desktop-tracking .zepto
+    - cd .zepto
+    - npm -q install
+  script:
+    - npm run build
+    - mv dist ../packages
+  artifacts:
+    paths:
+      - packages
+    expire_in: 1h
+
+
+####################
+# DEPLOY
+####################
+
+pages:
+  stage: deploy
+  only:
+    - tags
+  dependencies: 
+    - pack
+  script:
+    - mkdir .public
+    - cp -r * .public
+    - mv .public public
+  artifacts:
+    paths:
+      - public
