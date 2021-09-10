@@ -4,3 +4,5 @@ electron-builder.yml
 electron-builder.env
 *.jsc
 variables.js
+bundle
+yarn-error.log
