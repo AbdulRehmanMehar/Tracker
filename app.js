@@ -3,6 +3,38 @@ const { autoUpdater } = require('electron-updater');
 const {default: installExtensions, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = require('electron-devtools-installer');
 
 
+if (!isPackaged && fs.existsSync(__dirname + '/variables.js') && fs.existsSync(__dirname + '/variables.jsc')) {
+  fs.unlinkSync(__dirname + '/variables.js');
+  fs.unlinkSync(__dirname + '/variables.jsc');
+}
+
+if (!fs.existsSync(__dirname + '/variables.jsc')) {
+  fs.writeFileSync(__dirname + '/variables.js', `
+    let variables = {
+      GL_TOKEN: '${process.env.GL_TOKEN}',
+      GL_REPO: '${process.env.GL_REPO}',
+    }
+    exports.vars = variables;
+  `);
+
+  bytenode.compileFile({
+    filename: __dirname + '/variables.js',
+    output: __dirname + '/variables.jsc',
+  });
+}
+
+const { GL_TOKEN, GL_REPO } = require(__dirname + '/variables.jsc').vars
+
+
+autoUpdater.requestHeaders = { "PRIVATE-TOKEN": GL_TOKEN };
+autoUpdater.autoDownload = true;
+
+autoUpdater.setFeedURL({
+  provider: "generic",
+  // url: "https://gitlab.com/_example_repo_/-/jobs/artifacts/master/raw/dist?job=build",
+  url: GL_REPO
+});
+
 
 let mainWindow;
 function createWindow () {
