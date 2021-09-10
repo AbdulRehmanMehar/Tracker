@@ -1,38 +1,36 @@
+const fs = require('fs')
 const { app, BrowserWindow, ipcMain, session } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const {default: installExtensions, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = require('electron-devtools-installer');
+const isPackaged = require('electron-is-packaged').isPackaged;
 
-
-if (!isPackaged && fs.existsSync(__dirname + '/variables.js') && fs.existsSync(__dirname + '/variables.jsc')) {
-  fs.unlinkSync(__dirname + '/variables.js');
-  fs.unlinkSync(__dirname + '/variables.jsc');
+if (!isPackaged && fs.existsSync('./variables.js') && fs.existsSync('./variables.jsc')) {
+  fs.unlinkSync('./variables.js');
+  fs.unlinkSync('./variables.jsc');
 }
 
-if (!fs.existsSync(__dirname + '/variables.jsc')) {
-  fs.writeFileSync(__dirname + '/variables.js', `
+if (!fs.existsSync('./variables.jsc')) {
+  fs.writeFileSync('./variables.js', `
     let variables = {
       GL_TOKEN: '${process.env.GL_TOKEN}',
-      GL_REPO: '${process.env.GL_REPO}',
     }
     exports.vars = variables;
   `);
 
   bytenode.compileFile({
-    filename: __dirname + '/variables.js',
-    output: __dirname + '/variables.jsc',
+    filename: './variables.js',
+    output: './variables.jsc',
   });
 }
 
-const { GL_TOKEN, GL_REPO } = require(__dirname + '/variables.jsc').vars
-
+const { GL_TOKEN } = require('./variables.jsc').vars
 
 autoUpdater.requestHeaders = { "PRIVATE-TOKEN": GL_TOKEN };
 autoUpdater.autoDownload = true;
 
 autoUpdater.setFeedURL({
   provider: "generic",
-  // url: "https://gitlab.com/_example_repo_/-/jobs/artifacts/master/raw/dist?job=build",
-  url: GL_REPO
+  url: 'https://gitlab.com/api/v4/projects/29516860/releases'
 });
 
 
