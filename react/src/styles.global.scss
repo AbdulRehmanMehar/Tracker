@@ -1,0 +1,59 @@
+@charset 'utf-8';
+@import "~bulma/bulma.sass";
+@import "./scss/signin.scss";
+@import "./scss/appdetails.scss";
+@import url("https://fonts.googleapis.com/css?family=Lato:400,700&display=swap");
+
+html {
+}
+html::-webkit-scrollbar {
+  width: 0.5em;
+}
+
+html::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: darkgray;
+  border-radius: 2px;
+  outline: 1px solid slategrey;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+}
+::-webkit-scrollbar {
+  width: 0.5em;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: darkgray;
+  border-radius: 2px;
+  outline: 1px solid slategrey;
+}
+
+.modified-menu-item:hover {
+  color: black !important;
+}
+
+.modified-menu-item-right:hover {
+  color: black !important;
+  cursor: pointer;
+}
+
+.background {
+  background-color: #dbd76a88;
+  width: 90%;
+  height: 100%;
+  transform: scale(1) rotate(0.4turn);
+  transform-origin: center;
+  position: fixed;
+  left: 50%;
+  top: 60%;
+  z-index: -1;
+}
