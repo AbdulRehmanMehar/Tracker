@@ -1479,7 +1479,7 @@ acorn@^8.4.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.5.0.tgz#4512ccb99b3698c752591e9bb4472e38ad43cee2"
   integrity sha512-yXbYeFy+jUuYd3/CDcg2NkIYE991XYX/bje7LmjJigUciaeO1JR4XxXgCIV1/Zc/dRuFEyw1L0pbA+qynJkW5Q==
 
-active-win@*:
+active-win@:
   version "7.6.1"
   resolved "https://registry.yarnpkg.com/active-win/-/active-win-7.6.1.tgz#04e9b9ddc9c23254b146e1a5518bdf33e1321daa"
   integrity sha512-yYvh5aFpPleNLu2g2HqKjudO8VG0bBC74q3VbzuPoITv5euhDeqh+J7SyViUVml/EI5KeeHl3dPB3huumTssHQ==
@@ -3181,7 +3181,7 @@ electron-rebuild@^3.2.3:
     tar "^6.0.5"
     yargs "^17.0.1"
 
-electron-reload@*:
+electron-reload@:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/electron-reload/-/electron-reload-1.5.0.tgz#179ab1f6941fcf0ed261c37b16dc465e201348f5"
   integrity sha512-L9X6LzsL3Bt2j0eJ4/MBrI9Vt902KvVUtBB7J4qrL1A9sXqC2fE0lpvUAlOThpJYh6zWO1l86U/YiEN9bDURHw==
