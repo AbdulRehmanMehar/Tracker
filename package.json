@@ -4,14 +4,17 @@
   "description": "https://www.zepto-ai.com/",
   "main": "main.js",
   "scripts": {
+    "postinstall": "electron-builder install-app-deps",
     "start:mix": "mix",
     "build:mix": "mix -p",
     "watch:mix": "mix watch",
     "start:app": "electron .",
-    "build:app": "yarn run prod && electron-builder build --win --publish never",
-    "deploy:app": "yarn run prod && electron-builder build --win --publish always",
+    "build:app": "electron-builder -mwl --publish never",
+    "deploy:app": "electron-builder -mwl --publish always",
     "start": "yarn start:mix && yarn start:app",
-    "watch": "yarn build:mix & yarn start:app"
+    "watch": "yarn build:mix & yarn start:app",
+    "build": "yarn run build:mix && yarn build:app",
+    "deploy": "yarn run build:mix && yarn deploy:app"
   },
   "build": {
     "appId": "com.zepto-ai.zepto",
@@ -25,7 +28,31 @@
       "package.json",
       "bundle",
       "!bundle/js/index.js"
-    ]
+    ],
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://gitlab.com"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "verifyUpdateCodeSignature": false
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "identity": "Mac Developer: Zepto-AI",
+      "target": [
+        "dmg"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    }
   },
   "author": "Zepto-Ai",
   "license": "MIT",
@@ -35,7 +62,6 @@
     "cross-env": "^7.0.3",
     "electron": "11.3.0",
     "electron-builder": "^22.11.7",
-    "electron-devtools-installer": "^3.2.0",
     "electron-rebuild": "^3.2.3",
     "laravel-mix": "*",
     "node-gyp-build": "^4.2.2",
@@ -63,6 +89,7 @@
     "node-loader": "^2.0.0",
     "node-notifier": "^10.0.0",
     "node-osascript": "^2.1.0",
+    "electron-devtools-installer": "^3.2.0",
     "os": "^0.1.2",
     "path": "^0.12.7",
     "react": "^17.0.2",
