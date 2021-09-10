@@ -1,41 +1,6 @@
-const fs = require('fs');
-const bytenode = require('bytenode');
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, session } = require('electron');
 const { autoUpdater } = require('electron-updater');
-const { isPackaged } = require('electron-is-packaged');
-
-if (!isPackaged && fs.existsSync(__dirname + '/variables.js') && fs.existsSync(__dirname + '/variables.jsc')) {
-  fs.unlinkSync(__dirname + '/variables.js');
-  fs.unlinkSync(__dirname + '/variables.jsc');
-}
-
-if (!fs.existsSync(__dirname + '/variables.jsc')) {
-  fs.writeFileSync(__dirname + '/variables.js', `
-
-    let variables = {
-      GH_TOKEN: '${process.env.GH_TOKEN}'
-    }
-    exports.vars = variables;
-  `);
-
-  bytenode.compileFile({
-    filename: __dirname + '/variables.js',
-    output: __dirname + '/variables.jsc',
-  });
-}
-
-const { GH_TOKEN } = require(__dirname + '/variables.jsc').vars
-
-
-autoUpdater.setFeedURL({
-  provider: 'github',
-  owner: 'AbdulRehmanMehar',
-  repo: 'electron-auto-update-deploy',
-  private: true,
-  token: GH_TOKEN,
-  releaseType: "release"
-})
-
+const {default: installExtensions, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = require('electron-devtools-installer');
 
 
 
@@ -44,14 +9,20 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false,
     webPreferences: {
+        accessibleTitle: 'Zepto', 
+        webSecurity: true,
         nodeIntegration: true,
+        nativeWindowOpen: true,
         contextIsolation: false,
     },
   });
   mainWindow.loadFile('index.html');
   mainWindow.once('ready-to-show', () => {
     autoUpdater.checkForUpdatesAndNotify();
+    mainWindow.show()
+    console.log('Welcome to the Application')
   });
   mainWindow.on('closed', function () {
     mainWindow = null;
@@ -59,8 +30,25 @@ function createWindow () {
 
 }
 
-app.on('ready', () => {
-  createWindow();
+app.on('ready', async () => {
+  // (async () => {
+  //   await session.defaultSession.loadExtension(REDUX_DEVTOOLS)
+  //   await session.defaultSession.loadExtension(REACT_DEVELOPER_TOOLS)
+  // })()
+
+  // [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
+    await installExtensions([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], {
+      loadExtensionOptions: {
+          allowFileAccess: true,
+      },
+    })
+  //       .then((name) => console.log(`Added Extension: ${name}`))
+  //       .catch((err) => console.log('An error occurred: ', err));
+  // });
+  app.allowRendererProcessReuse = false
+  
+  console.log('Starting Application')
+  createWindow();  
 });
 
 app.on('window-all-closed', function () {
@@ -91,6 +79,8 @@ autoUpdater.on('update-downloaded', () => {
 ipcMain.on('restartToUpdate', () => {
     autoUpdater.quitAndInstall();
 });
+
+console.log(process.platform)
 
 exports.app = app;
 exports.mainWindow = mainWindow;
