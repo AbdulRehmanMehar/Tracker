@@ -31,20 +31,12 @@ function createWindow () {
 }
 
 app.on('ready', async () => {
-  // (async () => {
-  //   await session.defaultSession.loadExtension(REDUX_DEVTOOLS)
-  //   await session.defaultSession.loadExtension(REACT_DEVELOPER_TOOLS)
-  // })()
-
-  // [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
-    await installExtensions([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], {
-      loadExtensionOptions: {
-          allowFileAccess: true,
-      },
-    })
-  //       .then((name) => console.log(`Added Extension: ${name}`))
-  //       .catch((err) => console.log('An error occurred: ', err));
-  // });
+  await installExtensions([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], {
+    loadExtensionOptions: {
+        allowFileAccess: true,
+    },
+  })
+  
   app.allowRendererProcessReuse = false
   
   console.log('Starting Application')
