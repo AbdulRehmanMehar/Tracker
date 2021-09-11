@@ -4,7 +4,7 @@
   "description": "https://www.zepto-ai.com/",
   "main": "main.js",
   "scripts": {
-    "prebuild": "bytenode -c app.js --electron && bytenode -c bundle/js/index.js --electron",
+    "prebuild": "node transpiler.dev.js && yarn postinstall",
     "postinstall": "electron-builder install-app-deps",
     "start:mix": "mix",
     "build:mix": "mix -p",
