@@ -15,8 +15,8 @@
     "deploy:app": "yarn prebuild && electron-builder -mwl --publish always",
     "start": "yarn start:mix && yarn start:app",
     "watch": "yarn build:mix & yarn start:app",
-    "build": "yarn run build:mix && yarn build:app-wl",
-    "deploy": "yarn run build:mix && yarn deploy:app"
+    "build": "yarn build:mix && yarn build:app-wl",
+    "deploy": "yarn build:mix && yarn deploy:app"
   },
   "build": {
     "appId": "com.zepto-ai.zepto",
