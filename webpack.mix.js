@@ -32,4 +32,5 @@ mix.webpackConfig({
 })
   .setPublicPath('./bundle')
   .js('react/src/index.js', 'bundle/js').react()
+  .sourceMaps()
   .setResourceRoot('./bundle/');
