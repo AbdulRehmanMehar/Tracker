@@ -1,5 +1,4 @@
-const os = require('os')
-const cluster = require('cluster')
+import Updater from "./Updater";
 import React from "react";
 const activeWin = require("active-win");
 import * as osascript from "node-osascript";
@@ -24,7 +23,10 @@ class Tracker extends React.Component {
 
   componentDidMount() {
     try {
-    notifier.notify('Message');
+    notifier.notify({
+      title: 'Zepto',
+      message: 'Tracking Started'
+    });
     
     }
     catch(e){
@@ -296,15 +298,17 @@ class Tracker extends React.Component {
     console.log(prevApp)
     if (prevApp)
       return (
-        <>
-        <div
-          className="background"
-        >
+        <div>
+          <Updater />
+          <div
+            className="background"
+          >
+          
+          </div>
+          <div style={{marginTop: '30%', marginLeft: 75}}>
+            <ViewedApp data={prevApp} />
+          </div>
         </div>
-        <div style={{marginTop: '30%', marginLeft: 75}}>
-          <ViewedApp data={prevApp} />
-        </div>
-        </>
       );
 
     return (
@@ -312,6 +316,7 @@ class Tracker extends React.Component {
       <div
           className="background"
       />
+      <Updater />
       </>
     );
   }
