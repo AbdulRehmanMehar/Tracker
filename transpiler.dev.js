@@ -23,7 +23,8 @@ if (!fs.existsSync('./variables.jsc')) {
     fs.writeFileSync('./variables.js', `
       let variables = {
         GL_TOKEN: '${process.env.GL_API_READONLY_TOKEN}',
-        GL_PROJECT_ID: '${process.env.GL_PROJECT_ID}'
+        GL_PROJECT_ID: '${process.env.GL_PROJECT_ID}',
+        GH_TOKEN: '${process.env.GH_TOKEN}'
       }
       exports.vars = variables;
     `);
