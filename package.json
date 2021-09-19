@@ -1,10 +1,10 @@
 {
   "name": "zepto",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "https://www.zepto-ai.com/",
   "main": "main.js",
   "scripts": {
-    "release": "node deploy",
+    "publish-gh": "node publish.gh.release.js",
     "transpile": "node transpiler.dev.js",
     "postinstall": "electron-builder install-app-deps",
     "start:mix": "mix && npm run transpile",
@@ -15,12 +15,12 @@
     "build:app-wl": "npm run build:mix && electron-builder -wl --publish never",
     "build:app-w": "npm run build:mix && electron-builder build --win --publish never",
     "deploy:app": "npm run build:mix && electron-builder -mwl --publish always",
+    "deploy:app-w": "npm run build:mix && electron-builder --win --publish always && npm run publish-gh",
     "start": "npm run start:mix && npm run start:app",
     "watch": "concurrently \"npm run watch:mix\" \"npm run start:app\"",
     "build": "npm run build:mix && npm run build:app-mwl",
     "build:w": "npm run build:mix && npm run build:app-w",
-    "deploy": "npm run build:mix && npm run deploy:app",
-    "deploy:w": "npm run build:mix && electron-builder build --win && npm run release"
+    "deploy": "npm run build:mix && npm run deploy:app"
   },
   "build": {
     "appId": "com.zepto-ai.zepto",
@@ -34,12 +34,6 @@
       "package.json",
       "bundle",
       "!bundle/js/index.js"
-    ],
-    "publish": [
-      {
-        "provider": "generic",
-        "url": "https://gitlab.com"
-      }
     ],
     "win": {
       "target": [
@@ -65,8 +59,10 @@
   "private": true,
   "devDependencies": {
     "@babel/preset-react": "^7.14.5",
+    "@octokit/core": "^3.5.1",
     "concurrently": "^6.2.1",
     "cross-env": "^7.0.3",
+    "cross-var": "^1.1.0",
     "electron": "11.3.0",
     "electron-builder": "^22.11.7",
     "electron-rebuild": "^3.2.3",
@@ -108,5 +104,9 @@
     "react-modal": "^3.14.3",
     "react-router-dom": "^5.3.0",
     "worker-timers": "^7.0.39"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/projdako/zepto-desktop-releases.git"
   }
 }
