@@ -1,72 +1,36 @@
 const fs = require('fs');
-const path = require('path');
-const http = require('http');
-const axios = require('axios');
 const bytenode = require('bytenode');
-const pjson = require('./package.json');
-const { spawnSync } = require('child_process');
-// const { NsisUpdater } = require('electron-updater');
-const { app, BrowserWindow, ipcMain, autoUpdater } = require('electron');
-const isPackaged = require('electron-is-packaged').isPackaged;
-const { GL_TOKEN, GL_PROJECT_ID } = require('./variables.jsc').vars
-const {default: installExtensions, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = require('electron-devtools-installer');
-let downloadDir;
+const { app, BrowserWindow, ipcMain } = require('electron');
+const { autoUpdater } = require('electron-updater');
+const { GH_TOKEN } = require(__dirname + '/variables.jsc').vars
 
-const baseUrl = `https://gitlab.com/api/v4/projects/${GL_PROJECT_ID}`
-const fetch = axios.create({
-  baseURL: baseUrl,
-  headers: {'PRIVATE-TOKEN': GL_TOKEN}
-});
+
+autoUpdater.setFeedURL({
+  provider: 'github',
+  owner: 'projdako',
+  repo: 'zepto-desktop-releases',
+  private: true,
+  token: GH_TOKEN,
+  releaseType: "release"
+})
+
+
+
 
 let mainWindow;
 function createWindow () {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    show: false,
     webPreferences: {
-        accessibleTitle: 'Zepto', 
-        webSecurity: true,
         nodeIntegration: true,
-        nativeWindowOpen: true,
         contextIsolation: false,
     },
   });
   mainWindow.loadFile('index.html');
-  mainWindow.once('ready-to-show', async () => {
-    mainWindow.show();
-    console.log('Welcome to the Application');
+  mainWindow.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
   });
-
-  
-  mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
-    const filePath = `${downloadDir}/${item.getFilename()}`;
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-    item.setSavePath(filePath);
-
-    item.on('updated', (event, state) => {
-      if (state === 'interrupted') {
-        console.log(item.getFilename() + ' Download is interrupted but can be resumed')
-
-      } else if (state === 'progressing') {
-        if (item.isPaused()) {
-          console.log(item.getFilename() + ' Download is paused')
-        } else {
-          console.log(`${item.getFilename()} Received bytes: ${item.getReceivedBytes()}`)
-        }
-      }
-
-    })
-    item.once('done', (event, state) => {
-      if (state === 'completed') {
-        console.log(item.getFilename() + ' Download successfully')
-        mainWindow.webContents.send('downloadComplete', { filePath })
-      } else {
-        console.log(`${item.getFilename()} Download failed: ${state}`)
-      }
-    })
-  });
-
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
@@ -74,16 +38,7 @@ function createWindow () {
 }
 
 app.on('ready', () => {
-  // await installExtensions([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], {
-  //   loadExtensionOptions: {
-  //       allowFileAccess: true,
-  //   },
-  // })
-  downloadDir = app.getPath("temp");
-  app.allowRendererProcessReuse = false
-  
-  console.log('Starting Application')
-  createWindow();    
+  createWindow();
 });
 
 app.on('window-all-closed', function () {
@@ -92,38 +47,26 @@ app.on('window-all-closed', function () {
   }
 });
 
-
 app.on('activate', function () {
   if (mainWindow === null) {
     createWindow();
   }
 });
 
-
 ipcMain.on('versionInfo', (event) => {
-  event.sender.send('versionInfo', { version: pjson.version });
+  event.sender.send('versionInfo', { version: app.getVersion() });
 });
 
-ipcMain.on('checkForUpdates', async () => {
-  let res = await fetch.request({
-    method: 'GET',
-    url: '/releases',
-  });
-  const release = res.data[0];
-  const version = release.tag_name.split('v').pop();
-  console.log('Updated available', pjson.version < version, pjson.version, version);
-  if (pjson.version < version) {
-    const assetURLs = res.data[0].assets.links;
-    mainWindow.webContents.send('gotAnUpdate', { assetURLs, GL_TOKEN });
-  }
+autoUpdater.on('update-available', () => {
+    mainWindow.webContents.send('gotAnUpdate');
+});
+autoUpdater.on('update-downloaded', () => {
+    mainWindow.webContents.send('downloadedTheUpdate');
 });
 
-
-ipcMain.on('installUpdates', (event, arg) => {
-  console.log(arg);
-
-  spawnSync(`${arg} --update`)
-})
+ipcMain.on('restartToUpdate', () => {
+    autoUpdater.quitAndInstall();
+});
 
 exports.app = app;
 exports.mainWindow = mainWindow;
