@@ -28,6 +28,7 @@
       "index.html",
       "**.jsc",
       "!**.js",
+      "!**.js.map",
       "main.js",
       "app.jsc",
       "node_modules/**/*",
