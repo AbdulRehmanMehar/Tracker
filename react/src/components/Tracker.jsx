@@ -1,4 +1,3 @@
-import Updater from "./Updater";
 import React from "react";
 const activeWin = require("active-win");
 import * as osascript from "node-osascript";
@@ -295,11 +294,9 @@ class Tracker extends React.Component {
 
   render() {
     const {prevApp} = this.state
-    console.log(prevApp)
     if (prevApp)
       return (
         <div>
-          <Updater />
           <div
             className="background"
           >
@@ -316,7 +313,7 @@ class Tracker extends React.Component {
       <div
           className="background"
       />
-      <Updater />
+      
       </>
     );
   }
