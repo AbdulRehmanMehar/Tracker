@@ -4,6 +4,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const { GH_TOKEN } = require(__dirname + '/variables.jsc').vars
 
+app.allowRendererProcessReuse = false
 
 autoUpdater.setFeedURL({
   provider: 'github',
@@ -23,9 +24,13 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-    },
+      accessibleTitle: 'Zepto', 
+      webSecurity: true,
+      nodeIntegration: true,
+      nativeWindowOpen: true,
+      contextIsolation: false,
+  }
+,
   });
   mainWindow.loadFile('index.html');
   mainWindow.once('ready-to-show', () => {
