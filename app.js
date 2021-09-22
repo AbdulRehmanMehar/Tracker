@@ -1,10 +1,12 @@
 const fs = require('fs');
+const log = require('electron-log');
 const bytenode = require('bytenode');
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
-const { GH_TOKEN } = require(__dirname + '/variables.jsc').vars
+const { GH_TOKEN } = require(__dirname + '/variables.jsc').vars;
 
-app.allowRendererProcessReuse = false
+autoUpdater.logger = log;
+app.allowRendererProcessReuse = false;
 
 autoUpdater.setFeedURL({
   provider: 'github',
@@ -13,10 +15,7 @@ autoUpdater.setFeedURL({
   private: true,
   token: GH_TOKEN,
   releaseType: "release"
-})
-
-
-
+});
 
 let mainWindow;
 function createWindow () {
@@ -29,9 +28,9 @@ function createWindow () {
       nodeIntegration: true,
       nativeWindowOpen: true,
       contextIsolation: false,
-  }
-,
+    }
   });
+
   mainWindow.loadFile('index.html');
   mainWindow.once('ready-to-show', () => {
     autoUpdater.checkForUpdatesAndNotify();
@@ -39,7 +38,6 @@ function createWindow () {
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
-
 }
 
 app.on('ready', () => {
@@ -65,6 +63,14 @@ ipcMain.on('versionInfo', (event) => {
 autoUpdater.on('update-available', () => {
     mainWindow.webContents.send('gotAnUpdate');
 });
+
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = "Download speed: " + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + Math.round(progressObj.percent) + '%';
+  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  sendStatusToWindow(log_message);
+});
+
 autoUpdater.on('update-downloaded', () => {
     mainWindow.webContents.send('downloadedTheUpdate');
 });
@@ -72,6 +78,12 @@ autoUpdater.on('update-downloaded', () => {
 ipcMain.on('restartToUpdate', () => {
     autoUpdater.quitAndInstall();
 });
+
+
+function sendStatusToWindow(text) {
+  log.info(text);
+  mainWindow.webContents.send('downloadProgress', text);
+}
 
 exports.app = app;
 exports.mainWindow = mainWindow;
