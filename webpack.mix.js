@@ -1,6 +1,8 @@
 const mix = require('laravel-mix')
 const nodeExternals = require('webpack-node-externals');
 
+mix.disableNotifications();
+
 mix.webpackConfig({
   target: 'node',
   externals: [ nodeExternals() ],
