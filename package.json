@@ -1,6 +1,6 @@
 {
   "name": "zepto",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "https://www.zepto-ai.com/",
   "main": "main.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "watch:mix": "mix watch",
     "start:app": "electron .",
     "build:app-mwl": "npm run build:mix && electron-builder -mwl --publish never",
-    "build:app-wl": "npm run build:mix && electron-builder -wl --publish never",
+    "build:docker-app-l": "electron-builder -l --publish never",
     "build:app-w": "npm run build:mix && electron-builder build --win --publish never",
     "deploy:app": "npm run build:mix && electron-builder -mwl --publish always",
     "deploy:app-w": "npm run build:mix && electron-builder --win --publish always && npm run publish-gh",
@@ -86,6 +86,7 @@
     "bytenode": "^1.3.3",
     "electron-devtools-installer": "^3.2.0",
     "electron-is-packaged": "^1.0.2",
+    "electron-log": "^4.4.1",
     "electron-reload": "",
     "electron-updater": "^4.3.9",
     "iconv": "^3.0.0",
