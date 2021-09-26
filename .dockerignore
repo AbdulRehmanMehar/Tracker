@@ -6,3 +6,5 @@
 !app.jsc
 !package.json
 !bundle
+!variables.js
+!publish.gh.release.js
