@@ -1,5 +1,18 @@
+const fs = require('fs');
 const { Octokit } = require("@octokit/core");
-const octokit = new Octokit({ auth: process.env.GH_TOKEN });
+
+
+let authToken;
+
+if (fs.existsSync('./variables.js')) {
+    const { GH_TOKEN } = require('./variables.js').vars;
+    authToken = GH_TOKEN;
+    
+} else {
+    authToken = process.env.GH_TOKEN;
+}
+
+const octokit = new Octokit({ auth: authToken });
 
 (async () => {
     let response = await octokit.request("GET /repos/{owner}/{repo}/releases", {
