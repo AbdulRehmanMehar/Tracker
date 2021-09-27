@@ -8,23 +8,21 @@
 </head>
 <body>
     <div id="root"></div>
-    <!-- <script>
-      // const fs = require('fs');
-      // const bytenode = require('bytenode');
-      // const jsFile = './bundle/js/index.js';
-      // const jscFile = './bundle/js/index.jsc';
-      // const isPackaged = require('electron-is-packaged').isPackaged;
+    <script>
+      const fs = require('fs');
+      const bytenode = require('bytenode');
+      const jsFile = './bundle/js/index.js';
+      const jscFile = './bundle/js/index.jsc';
+      const isPackaged = require('electron-is-packaged').isPackaged;
       
-      // if (!isPackaged) {
-      //   if (fs.existsSync(jscFile)) fs.unlinkSync(jscFile);
-      //   let compiledFilename = bytenode.compileFile({
-      //     filename: jsFile,
-      //     output: jscFile
-      //   });
-      // }
-      // require(jscFile);
-    </script> -->
-
-    <script src="bundle/js/index.js"></script>
+      if (!isPackaged) {
+        if (fs.existsSync(jscFile)) fs.unlinkSync(jscFile);
+        let compiledFilename = bytenode.compileFile({
+          filename: jsFile,
+          output: jscFile
+        });
+      }
+      require(jscFile);
+    </script>
 </body>
 </html>
