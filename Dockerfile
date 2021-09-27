@@ -1,7 +1,8 @@
 FROM electronuserland/builder:wine
 ARG TOKEN=sadkl
-WORKDIR /app
-COPY . .
 ENV GH_TOKEN=$TOKEN
-RUN yarn
+WORKDIR /app
+COPY package.json .
+RUN yarn install
+COPY . .
 CMD ["yarn", "deploy:docker-app-wl"]
