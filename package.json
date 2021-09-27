@@ -1,6 +1,6 @@
 {
   "name": "zepto",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "https://www.zepto-ai.com/",
   "main": "main.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "watch": "concurrently \"npm run watch:mix\" \"npm run start:app\"",
     "build": "npm run build:mix && npm run build:app-mwl",
     "build:w": "npm run build:mix && npm run build:app-w",
-    "deploy": "node build.packages.js"
+    "deploy": "node --experimental-modules build.packages.mjs"
   },
   "build": {
     "appId": "com.zepto-ai.zepto",
@@ -69,8 +69,11 @@
     "electron": "15.0.0",
     "electron-builder": "^22.11.7",
     "electron-rebuild": "^3.2.3",
+    "figlet": "^1.5.2",
     "laravel-mix": "*",
+    "log-beautify": "^1.2.0",
     "node-gyp-build": "^4.2.2",
+    "ora": "^6.0.1",
     "os-browserify": "^0.3.0",
     "postcss": "8.3.1",
     "prop-types": "^15.7.2",
