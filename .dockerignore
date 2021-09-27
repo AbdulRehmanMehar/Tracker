@@ -7,4 +7,5 @@
 !package.json
 !bundle
 !variables.js
+!variables.jsc
 !publish.gh.release.js
