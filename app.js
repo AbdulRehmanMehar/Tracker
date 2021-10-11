@@ -1,8 +1,9 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const log = require('electron-log');
 const { autoUpdater } = require('electron-updater');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { GH_TOKEN } = require(__dirname + '/variables.jsc').vars;
 
-// autoUpdater.logger = log;
+autoUpdater.logger = log;
 app.allowRendererProcessReuse = false
 
 autoUpdater.setFeedURL({
@@ -29,7 +30,7 @@ function createWindow () {
         backgroundColor: '#ffffff',
         title:          "Loading..."
     });
-    loadingWindow.loadURL('file://' + __dirname + '/assets/icon.png');
+    loadingWindow.loadURL('file://' + __dirname + '/assets/icon_orignal.png');
 
     loadingWindow.once('ready-to-show', () => {
         loadingWindow.show();
@@ -104,12 +105,10 @@ autoUpdater.on('update-available', () => {
     mainWindow.webContents.send('gotAnUpdate');
 });
 
-// autoUpdater.on('download-progress', (progressObj) => {
-//   let log_message = "Download speed: " + progressObj.bytesPerSecond;
-//   log_message = log_message + ' - Downloaded ' + Math.round(progressObj.percent) + '%';
-//   log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-//   sendStatusToWindow(log_message);
-// });
+function sendStatusToWindow(text) {
+    log.info(text);
+    mainWindow.webContents.send('downloadProgress', text);
+}
 
 autoUpdater.on('download-progress', (progressObj) => {
   let log_message = "Download speed: " + progressObj.bytesPerSecond;

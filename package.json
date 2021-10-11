@@ -18,7 +18,7 @@
     "build:app-m": "electron-builder -m --publish always",
     "build:app-mwl": "npm run build:mix && electron-builder -mwl --publish never",
     "build:docker-app-l": "electron-builder -l --publish always",
-    "build:app-w": "electron-builder build --win --publish always",
+    "build:app-w": "electron-builder build --win --publish never",
     "deploy:app": "npm run build:mix && electron-builder -mwl --publish always",
     "deploy:docker-app-wl": "electron-builder -wl --publish always && npm run publish-gh",
     "start": "npm run start:hot",
@@ -29,6 +29,9 @@
   },
   "build": {
     "appId": "com.zepto-ai.zepto",
+    "directories": {
+      "buildResources": "assets"
+    },
     "files": [
       "index.html",
       "**.jsc",
@@ -45,7 +48,13 @@
       "target": [
         "nsis"
       ],
-      "verifyUpdateCodeSignature": false
+      "verifyUpdateCodeSignature": false,
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "installerIcon": "assets/icon.ico",
+      "installerHeaderIcon": "assets/icon.ico",
+      "deleteAppDataOnUninstall": true
     },
     "mac": {
       "category": "public.app-category.productivity",

@@ -8,7 +8,7 @@ function notify (title, message) {
         appID: 'Zepto-ai',
         title: title,
         message: message,
-        icon: 'assets/icon.png'
+        icon: '../../../assets/icon.png'
     });
 }
 

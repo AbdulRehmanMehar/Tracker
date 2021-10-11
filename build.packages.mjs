@@ -35,14 +35,19 @@ setTimeout(async () => {
 
     if (process.platform == "darwin") {
         await runCommand("npm run build:app-m");
-    } else if (process.platform == "win32") {
-        await runCommand("npm run build:app-w");
-    }
+    } 
+    // else if (process.platform == "win32") {
+    //     await runCommand("npm run build:app-w");
+    // }
 
     try {
         await runCommand("docker image rm zepto-image");
     } catch(error) {}
-    await runCommand(`docker build -t zepto-image . --build-arg TOKEN=${process.env.GH_TOKEN}`);    
+    await runCommand(`docker build -t zepto-image . --build-arg TOKEN=${process.env.GH_TOKEN}`);
+
+    try {
+        await runCommand("docker container rm zeptoBuilds");
+    } catch(error) {}
     try {
         await runCommand("docker run --name zeptoBuilds zepto-image");
     } catch (err) {
