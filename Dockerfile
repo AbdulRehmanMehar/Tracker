@@ -5,4 +5,4 @@ WORKDIR /app
 COPY package.json .
 RUN yarn install
 COPY . .
-CMD ["yarn", "deploy:docker-app-wl"]
+CMD ["yarn", "build:docker-app-l"]

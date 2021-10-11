@@ -6,6 +6,7 @@ import Signin from "./components/SignIn.jsx";
 import PrivateRoute from "./PrivateRoute.js";
 import Tracker from "./components/Tracker.jsx";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import * as Console from "console";
 
 export default class App extends React.Component {
   constructor(props) {

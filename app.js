@@ -1,11 +1,6 @@
-const fs = require('fs');
-// const log = require('electron-log');
-const log = require('electron-log');
-const bytenode = require('bytenode');
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const { GH_TOKEN } = require(__dirname + '/variables.jsc').vars;
-console.log('asd')
 
 // autoUpdater.logger = log;
 app.allowRendererProcessReuse = false
@@ -19,11 +14,34 @@ autoUpdater.setFeedURL({
   releaseType: "release"
 });
 
-let mainWindow;
+let mainWindow, loadingWindow;
 function createWindow () {
-  mainWindow = new BrowserWindow({
+    loadingWindow = new BrowserWindow({
+        width:          128,
+        height:         128,
+        show:           false,
+        icon:           'assets/icon.png',
+        transparent:    (process.platform != 'linux'), // Transparency doesn't work on Linux.
+        resizable:      false,
+        frame:          false,
+        alwaysOnTop:    true,
+        hasShadow:      false,
+        backgroundColor: '#ffffff',
+        title:          "Loading..."
+    });
+    loadingWindow.loadURL('file://' + __dirname + '/assets/icon.png');
+
+    loadingWindow.once('ready-to-show', () => {
+        loadingWindow.show();
+    })
+
+    mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false,
+    backgroundColor: '#ffffff',
+    icon: 'assets/icon.png',
+    paintWhenInitiallyHidden: true,
     webPreferences: {
       accessibleTitle: 'Zepto', 
       webSecurity: true,
@@ -33,30 +51,49 @@ function createWindow () {
     }
   });
 
-  mainWindow.loadFile('index.html');
+  let uri = 'file://' + __dirname + '/index.html';
+    console.log(process.argv)
+  if (process.argv[2] == 'hot') uri = 'http://localhost:3000';
+    console.log(uri)
+    mainWindow.loadURL(uri);
   mainWindow.once('ready-to-show', () => {
     autoUpdater.checkForUpdatesAndNotify();
   });
+  mainWindow.once('show', () => {
+      loadingWindow.destroy();
+  })
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
 }
 
+
+
 app.on('ready', () => {
-  console.log('meesage');
-  createWindow();
+    createWindow();
+
+    if (!app.isPackaged) {
+        mainWindow.webContents.openDevTools()
+    }
+
+    mainWindow.webContents.once('ready-to-show', function ()
+    {
+        mainWindow.show();
+        console.log('hi from mainwindow.once')
+    });
 });
 
+
 app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });
 
 app.on('activate', function () {
-  if (mainWindow === null) {
-    createWindow();
-  }
+    if (mainWindow === null) {
+        createWindow();
+    }
 });
 
 ipcMain.on('versionInfo', (event) => {
@@ -89,11 +126,6 @@ ipcMain.on('restartToUpdate', () => {
     autoUpdater.quitAndInstall();
 });
 
-
-// function sendStatusToWindow(text) {
-//   log.info(text);
-//   mainWindow.webContents.send('downloadProgress', text);
-// }
-
 exports.app = app;
 exports.mainWindow = mainWindow;
+exports.createWindow = createWindow;

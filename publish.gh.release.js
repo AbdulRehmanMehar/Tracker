@@ -27,16 +27,16 @@ const octokit = new Octokit({ auth: authToken });
         if (release.draft) drafted.push(release.id);
     }
 
-    console.log(drafted);
+    console.log(response.data);
 
 
-    for (let id of drafted) {
-        response = await octokit.request('PATCH /repos/{owner}/{repo}/releases/{release_id}', {
-            owner: "projdako",
-            repo: "zepto-desktop-releases",
-            private: true,
-            release_id: id,
-            draft: false
-        });
-    }
+    // for (let id of drafted) {
+    //     response = await octokit.request('PATCH /repos/{owner}/{repo}/releases/{release_id}', {
+    //         owner: "projdako",
+    //         repo: "zepto-desktop-releases",
+    //         private: true,
+    //         release_id: id,
+    //         draft: false
+    //     });
+    // }
 })();

@@ -8,6 +8,7 @@ import { Auth, PaymentHelper } from "../helpers";
 import TermsofUse from "./termsofUse.jsx";
 import ResponsiveLogo from "./responsiveLogo.jsx";
 import API from "../api";
+import notify from "../helpers/notifier";
 
 const customStyles = {
   content: {
@@ -108,13 +109,13 @@ class Signin extends React.Component {
           Mixpanel.identify(username);
           localStorage.clear();
           const accessToken = result.data.access_token;
-          console.log(accessToken);
           localStorage.setItem("token", result.data.access_token);
           localStorage.setItem("refreshToken", result.data.refresh_token);
           console.log(accessToken);
           API.get("user/status/", {
             headers: { Authorization: `Bearer ${accessToken}` }
           }).then(result => {
+            notify('Login Success!', 'Hi ' + result.data.attachedEmail);
             if (result.data.isAttached === false) {
               API.get("payment/subscription/", {
                 headers: { Authorization: `Bearer ${accessToken}` }
@@ -123,18 +124,18 @@ class Signin extends React.Component {
                   API.get("user/settings/", {
                     headers: { Authorization: `Bearer ${accessToken}` }
                   }).then(result => {
-                    this.setState(
-                      {
-                        debugMode: result.data.debugMode
-                      },
-                      () => {
-                        if (!this.state.debugMode) {
-                          this.setState({
-                            outlookAuth: true
-                          });
-                        }
-                      }
-                    );
+                    // this.setState(
+                    //   {
+                    //     debugMode: result.data.debugMode
+                    //   },
+                    //   () => {
+                    //     if (!this.state.debugMode) {
+                    //       this.setState({
+                    //         outlookAuth: true
+                    //       });
+                    //     }
+                    //   }
+                    // );
                   });
                 }
               });
@@ -177,7 +178,7 @@ class Signin extends React.Component {
   }
 
   componentDidMount() {
-    console.log("Signin");
+    // console.log("Signin");
     Mixpanel.track("Sign in page opened");
   }
 
@@ -263,6 +264,7 @@ class Signin extends React.Component {
                 Terms of use. Privacy policy
               </a>
             </p>
+            <h1>asdas</h1>
           </div>
           <ReactModal
             isOpen={this.state.showModal}

@@ -1,9 +1,8 @@
 import React from "react";
 const activeWin = require("active-win");
 import * as osascript from "node-osascript";
-import signUpImg from "../assets/people_circle.jpg";
+import notify from "../helpers/notifier";
 import API from "../api.js";
-import notifier from 'node-notifier';
 import ViewedApp from './ViewedApp.jsx';
 import * as workerTimers from 'worker-timers';
 
@@ -22,11 +21,7 @@ class Tracker extends React.Component {
 
   componentDidMount() {
     try {
-    notifier.notify({
-      title: 'Zepto',
-      message: 'Tracking Started'
-    });
-    
+    notify('Tracking Started', 'Feel free to use your system while tracking');
     }
     catch(e){
         console.log(e)
@@ -293,29 +288,30 @@ class Tracker extends React.Component {
   }
 
   render() {
-    const {prevApp} = this.state
-    if (prevApp)
-      return (
-        <div>
-          <div
-            className="background"
-          >
-          
-          </div>
-          <div style={{marginTop: '30%', marginLeft: 75}}>
-            <ViewedApp data={prevApp} />
-          </div>
-        </div>
-      );
+    // const {prevApp} = this.state
+    // if (prevApp)
+    //   return (
+    //     <div>
+    //       <div
+    //         className="background"
+    //       >
+    //       </div>
+    //       <div style={{marginTop: '30%', marginLeft: 75}}>
+    //         <ViewedApp data={prevApp} />
+    //       </div>
+    //     </div>
+    //   );
 
-    return (
-      <>
-      <div
-          className="background"
-      />
-      
-      </>
-    );
+    // return (
+    //   <>
+    //   <div
+    //       className="background"
+    //   />
+    //
+    //   </>
+    // );
+
+    return (<h1>hiasds</h1>)
   }
 }
 

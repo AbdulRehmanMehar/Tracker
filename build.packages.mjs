@@ -35,6 +35,8 @@ setTimeout(async () => {
 
     if (process.platform == "darwin") {
         await runCommand("npm run build:app-m");
+    } else if (process.platform == "win32") {
+        await runCommand("npm run build:app-w");
     }
 
     try {
