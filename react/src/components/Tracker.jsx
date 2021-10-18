@@ -1,3 +1,5 @@
+import * as os from 'os';
+import * as path from "path";
 import React from "react";
 const activeWin = require("active-win");
 import * as osascript from "node-osascript";
@@ -231,13 +233,15 @@ class Tracker extends React.Component {
       
       const thisApp = this;
       activeWin().then(activeWin => {
-        if (process.platform == "darwin") {
+        if (os.platform() === 'darwin') {
           osascript.executeFile(
-            appRoot + "/components/get-foreground-window-title.osa",
-            function(err, path, raw) {
+             path.join(__dirname, "./get-foreground-window-title.osa"),
+            function(err, path1, raw) {
+              console.log('foreground', path1, raw);
               osascript.executeFile(
-                appRoot + "/components/get-mouse-location.osa",
+                 path.join(__dirname, "./get-mouse-location.osa"),
                 function(err, mouseLoc, raw) {
+                  console.log('mouse', mouseLoc, raw);
                   if (path[6])
                     thisApp.sendOutlookWriteEvent(
                       path,
