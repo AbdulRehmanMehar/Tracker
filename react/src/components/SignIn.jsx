@@ -3,7 +3,7 @@ import { Link, Redirect } from "react-router-dom";
 import Cookies from "js-cookie";
 import ReactModal from "react-modal";
 import ErrorMessage from "./errorMessage.jsx";
-import { Mixpanel } from "./mixpanel.jsx";
+// import { Mixpanel } from "./mixpanel.jsx";
 import { Auth, PaymentHelper } from "../helpers";
 import TermsofUse from "./termsofUse.jsx";
 import ResponsiveLogo from "./responsiveLogo.jsx";
@@ -52,21 +52,21 @@ class Signin extends React.Component {
   }
 
   handleOpenOutlookModal() {
-    Mixpanel.track("Outlook permission modal opened signin");
+    // Mixpanel.track("Outlook permission modal opened signin");
     this.setState({
       showOutlookModal: true
     });
   }
 
   handleCloseOutlookModal() {
-    Mixpanel.track("Outlook permission modal closed taken from signin");
+    // Mixpanel.track("Outlook permission modal closed taken from signin");
     this.setState({
       showOutlookModal: false
     });
   }
 
   handleCloseOutlookModalGranted() {
-    Mixpanel.track("Outlook permission modal closed taken to outlook signin");
+    // Mixpanel.track("Outlook permission modal closed taken to outlook signin");
     //location.href = `${this.state.attachUrl}`
   }
 
@@ -88,14 +88,14 @@ class Signin extends React.Component {
   }
 
   handleOpenModal() {
-    Mixpanel.track("Terms of use opened in Sign in");
+    // Mixpanel.track("Terms of use opened in Sign in");
     this.setState({
       showModal: true
     });
   }
 
   handleCloseModal() {
-    Mixpanel.track("Terms of use closed in Sign in");
+    // Mixpanel.track("Terms of use closed in Sign in");
     this.setState({
       showModal: false
     });
@@ -106,7 +106,7 @@ class Signin extends React.Component {
     Auth.signin(username, password)
       .then(result => {
         if (result.status === 200) {
-          Mixpanel.identify(username);
+          // Mixpanel.identify(username);
           localStorage.clear();
           const accessToken = result.data.access_token;
           localStorage.setItem("token", result.data.access_token);
@@ -179,7 +179,7 @@ class Signin extends React.Component {
 
   componentDidMount() {
     // console.log("Signin");
-    Mixpanel.track("Sign in page opened");
+    // Mixpanel.track("Sign in page opened");
   }
 
   render() {
@@ -196,7 +196,7 @@ class Signin extends React.Component {
             <div className="has-text-centered">
               <a
                 onClick={() => {
-                  Mixpanel.track("Went to zepto-ai.com from Sign in");
+                  // Mixpanel.track("Went to zepto-ai.com from Sign in");
                   //location.href = 'https://www.zepto-ai.com/'
                 }}
               >
