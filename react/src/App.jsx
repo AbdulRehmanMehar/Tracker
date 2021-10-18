@@ -33,15 +33,15 @@ export default class App extends React.Component {
 
   }
 
-  makeUpdaterVisibile(show) {
+  makeUpdaterVisible(show) {
     this.setState({ showUpdater: show });
   }
 
   render() {
     let upd;
     if (this.state.showUpdater) {
-      upd = <Updater status={this.state.updateStatus} makeUpdaterVisibile={(show) => {
-        this.makeUpdaterVisibile(show)
+      upd = <Updater status={this.state.updateStatus} makeUpdaterVisible={(show) => {
+        this.makeUpdaterVisible(show)
       }} />;
     }
 

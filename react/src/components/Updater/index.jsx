@@ -56,7 +56,7 @@ class Updater extends React.Component {
         let btn;
         if (this.props.status == 'gotAnUpdate') {
             btn = <button className="button is-dark my-2" onClick={() => {
-                this.props.makeUpdaterVisibile(false)
+                this.props.makeUpdaterVisible(false)
             }}>{ this.state.callToAction }</button>;
         } else {
             btn = <button className="button is-dark my-2" onClick={this.executeAction}>{ this.state.callToAction }</button>;
@@ -68,7 +68,7 @@ class Updater extends React.Component {
                     <div className="modal-content">
                         <div className="modal-header">
                             <div className={(process.platform == 'darwin') ? "close" : "close right"} title="close" onClick={ () => {
-                                this.props.makeUpdaterVisibile(false)
+                                this.props.makeUpdaterVisible(false)
                             } }></div>
                             <span className="modal-title">{ this.state.title }</span>
                         </div>
