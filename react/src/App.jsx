@@ -4,9 +4,10 @@ import { ipcRenderer } from 'electron';
 import Updater from "./components/Updater";
 import Signin from "./components/SignIn.jsx";
 import PrivateRoute from "./PrivateRoute.js";
+import * as os from 'os';
 import Tracker from "./components/Tracker.jsx";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
-import * as Console from "console";
+import { enableAXDocumentForJetBrains, enableAXDocumentForVsCode } from './helpers/darwin-config';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -18,7 +19,7 @@ export default class App extends React.Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     ipcRenderer.on('gotAnUpdate', (event, arg) => {
       this.makeUpdaterVisibile(true);
       ipcRenderer.removeAllListeners('gotAnUpdate');
@@ -31,6 +32,10 @@ export default class App extends React.Component {
       this.setState({updateStatus:  'downloadedTheUpdate'}); 
     });
 
+    if (os.platform() === 'darwin') {
+      await enableAXDocumentForVsCode();
+      await enableAXDocumentForJetBrains();
+    }
   }
 
   makeUpdaterVisible(show) {
