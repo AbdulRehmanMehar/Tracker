@@ -127,7 +127,8 @@
     "react-modal": "^3.14.3",
     "react-router-dom": "^5.3.0",
     "react-watcher": "^0.0.1",
-    "worker-timers": "^7.0.39"
+    "worker-timers": "^7.0.39",
+    "xml2js": "^0.4.23"
   },
   "repository": {
     "type": "git",
