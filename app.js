@@ -21,7 +21,7 @@ function createWindow () {
         width:          128,
         height:         128,
         show:           false,
-        icon:           'assets/icon.png',
+        icon:           'assets/icon_orignal.png',
         transparent:    (process.platform != 'linux'), // Transparency doesn't work on Linux.
         resizable:      false,
         frame:          false,
@@ -41,7 +41,7 @@ function createWindow () {
     height: 600,
     show: false,
     backgroundColor: '#ffffff',
-    icon: 'assets/icon.png',
+    icon: 'assets/icon_orignal.png',
     paintWhenInitiallyHidden: true,
     webPreferences: {
       accessibleTitle: 'Zepto', 
