@@ -1,4 +1,5 @@
 const fs = require('fs')
+const os = require('os')
 const mix = require('laravel-mix')
 const nodeExternals = require('webpack-node-externals');
 
@@ -93,3 +94,10 @@ mix.setPublicPath('./bundle')
   .sourceMaps()
     .version();
 
+
+if (os.platform() === 'darwin') {
+    mix.copy('react/src/components/get-foreground-window-title.osa', 'bundle/js/get-foreground-window-title.osa');
+    mix.copy('react/src/components/get-mouse-location.osa', 'bundle/js/get-mouse-location.osa');
+} else if (os.platform() === 'win32') {
+    mix.copy('react/src/components/get-foreground-window-title.ps1', 'bundle/js/get-foreground-window-title.ps1 ');
+}
