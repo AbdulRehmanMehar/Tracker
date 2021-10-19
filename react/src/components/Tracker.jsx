@@ -268,6 +268,7 @@ class Tracker extends React.Component {
                     res: JSON.stringify(activeWin) + path + mouseLoc + Date.now()
                   });
                   if (
+                      mouseLoc &&
                     mouseLoc[0] != thisApp.state.mouseLoc[0] &&
                     mouseLoc[1] != thisApp.state.mouseLoc[1]
                   ) {
