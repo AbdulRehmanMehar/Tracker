@@ -292,30 +292,29 @@ class Tracker extends React.Component {
   }
 
   render() {
-    // const {prevApp} = this.state
-    // if (prevApp)
-    //   return (
-    //     <div>
-    //       <div
-    //         className="background"
-    //       >
-    //       </div>
-    //       <div style={{marginTop: '30%', marginLeft: 75}}>
-    //         <ViewedApp data={prevApp} />
-    //       </div>
-    //     </div>
-    //   );
+    const {prevApp} = this.state
+    if (prevApp)
+      return (
+        <div>
+          <div
+            className="background"
+          >
+          </div>
+          <div style={{marginTop: '30%', marginLeft: 75}}>
+            <ViewedApp data={prevApp} />
+          </div>
+        </div>
+      );
 
-    // return (
-    //   <>
-    //   <div
-    //       className="background"
-    //   />
-    //
-    //   </>
-    // );
+    return (
+      <>
+      <div
+          className="background"
+      />
 
-    return (<h1>hiasds</h1>)
+      </>
+    );
+
   }
 }
 
