@@ -6,7 +6,11 @@ import * as osascript from "node-osascript";
 import notify from "../helpers/notifier";
 import API from "../api.js";
 import ViewedApp from './ViewedApp.jsx';
+import Shell, { PSCommand } from 'node-powershell';
 import * as workerTimers from 'worker-timers';
+import Logger from "./Logger";
+import { isPackaged } from 'electron-is-packaged';
+
 
 
 class Tracker extends React.Component {
@@ -15,15 +19,27 @@ class Tracker extends React.Component {
     this.getWindow = this.getWindow.bind(this);
     this.state = {
       res: "",
-      mouseLoc: [0, 0],
+
       draftIds: {},
-      wordIds: {}
+      wordIds: {},
+      // Windows Application Tracking State
+      processName: '',
+      processTitle: '',
+      processIcon: '',
+      filePath: '',
+      fileName: '',
+      mouseLoc: [0, 0],
+      trackedAppsHistory: []
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     try {
-    notify('Tracking Started', 'Feel free to use your system while tracking');
+      notify('Tracking Started', 'Feel free to use your system while tracking');
+      const ps = new Shell();
+      let setpath = new PSCommand(`$env:Path=${path.resolve(__dirname, './bundle/js/handle.exe')};$env:Path"`)
+      await ps.addCommand(setpath);
+      ps.invoke().then(output => console.log(output));
     }
     catch(e){
         console.log(e)
@@ -232,7 +248,7 @@ class Tracker extends React.Component {
   getWindow() {
       
       const thisApp = this;
-      activeWin().then(activeWin => {
+      activeWin().then(async activeWin => {
         if (os.platform() === 'darwin') {
           osascript.executeFile(
              path.join(__dirname, "./get-foreground-window-title.osa"),
@@ -281,7 +297,63 @@ class Tracker extends React.Component {
               if (err) return console.error(err);
             }
           );
-        } else {
+        }
+        else if (os.platform() === 'win32') {
+
+          const ps = new Shell();
+          let scriptPath = './resources/win32/tracker.ps1';
+          if (isPackaged) scriptPath = path.join(__dirname, '../../../resources/win32/tracker.ps1');
+          let script = new PSCommand(`& "${scriptPath}"`);
+
+          await ps.addCommand(script);
+          ps.invoke().then(output => {
+            console.log(output);
+            output = JSON.parse(output);
+
+            let { ProcessName, ProcessTitle, FilePath, FileName, MouseX, MouseY, ProcessIcon } = output;
+
+            let mouseLoc = [MouseX, MouseY];
+
+            if (this.state.processName != '') {
+              let prevState = {};
+              prevState.processName = this.state.processName;
+              prevState.processTitle = this.state.processTitle;
+              prevState.processIcon = this.state.processIcon;
+              prevState.mouseLoc = this.state.mouseLoc;
+              prevState.fileName = this.state.fileName;
+              prevState.filePath = this.state.filePath;
+
+              if (this.state.trackedAppsHistory && this.state.trackedAppsHistory.length > 0)
+                this.setState({ trackedAppsHistory: [prevState, ...this.state.trackedAppsHistory] });
+              else this.setState({ trackedAppsHistory: [prevState] });
+            }
+
+            this.setState({
+              processName: ProcessName,
+              processTitle: ProcessTitle,
+              processIcon: `data:image/png;base64,${ProcessIcon}`,
+              mouseLoc: mouseLoc,
+              fileName: '',
+              filePath: '',
+            });
+            if (FileName != "") {
+              this.setState({ fileName: FileName });
+              let fPaths = FilePath.split('    ');
+              fPaths.forEach(fp => {
+                if (fp.includes(FileName)) {
+                  console.log(fp, FileName, fp.includes(FileName));
+                  fp = fp.slice(0,3) + ':' + fp.slice(3)
+                  this.setState({ filePath: fp });
+                }
+              })
+            }
+            // console.log(fPaths);
+          }).catch(err => {
+            console.log(err);
+            ps.dispose();
+          });
+        }
+        else {
           console.log(activeWin)
         }
       });
@@ -293,26 +365,53 @@ class Tracker extends React.Component {
   }
 
   render() {
-    const {prevApp} = this.state
-    if (prevApp)
-      return (
-        <div>
-          <div
-            className="background"
-          >
-          </div>
-          <div style={{marginTop: '30%', marginLeft: 75}}>
-            <ViewedApp data={prevApp} />
-          </div>
-        </div>
-      );
+    // const {prevApp} = this.state
+    // if (prevApp)
+    //   return (
+    //     <div>
+    //       <div
+    //         className="background"
+    //       >
+    //       </div>
+    //       <div style={{marginTop: '30%', marginLeft: 75}}>
+    //         <ViewedApp data={prevApp} />
+    //       </div>
+    //     </div>
+    //   );
 
     return (
       <>
       <div
           className="background"
-      />
+      >
 
+      </div>
+        <div className="container is-max-desktop">
+          <div className="columns is-mobile is-centered">
+            <div className="column is-half">
+              <Logger
+                  processIcon={this.state.processIcon}
+                  processTitle={this.state.processTitle}
+                  processName={this.state.processName}
+                  mouseLoc={this.state.mouseLoc}
+                  fileName={this.state.fileName}
+                  filePath={this.state.filePath}
+              />
+
+
+              { this.state.trackedAppsHistory.map((history, index) => {
+                return <Logger key={index}
+                               processIcon={history.processIcon}
+                               processTitle={history.processTitle}
+                               processName={history.processName}
+                               mouseLoc={history.mouseLoc}
+                               fileName={history.fileName}
+                               filePath={history.filePath}
+                />})
+              }
+            </div>
+          </div>
+        </div>
       </>
     );
 
