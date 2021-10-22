@@ -1,6 +1,8 @@
 const log = require('electron-log');
 const { autoUpdater } = require('electron-updater');
 const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require("path");
+const isPackaged = require('electron-is-packaged').isPackaged;
 const { GH_TOKEN } = require(__dirname + '/variables.jsc').vars;
 
 autoUpdater.logger = log;
@@ -21,7 +23,7 @@ function createWindow () {
         width:          128,
         height:         128,
         show:           false,
-        icon:           'assets/icon_orignal.png',
+        icon:           'assets/icon_original.png',
         transparent:    (process.platform != 'linux'), // Transparency doesn't work on Linux.
         resizable:      false,
         frame:          false,
@@ -30,7 +32,9 @@ function createWindow () {
         backgroundColor: '#ffffff',
         title:          "Loading..."
     });
-    loadingWindow.loadURL('file://' + __dirname + '/assets/icon_orignal.png');
+    let loaderPath = './resources/icon.png';
+    if (isPackaged) loaderPath = path.join(__dirname, '../resources/icon.png');
+    loadingWindow.loadFile(loaderPath);
 
     loadingWindow.once('ready-to-show', () => {
         loadingWindow.show();
@@ -41,7 +45,7 @@ function createWindow () {
     height: 600,
     show: false,
     backgroundColor: '#ffffff',
-    icon: 'assets/icon_orignal.png',
+    icon: 'assets/icon_original.png',
     paintWhenInitiallyHidden: true,
     webPreferences: {
       accessibleTitle: 'Zepto', 
@@ -52,17 +56,18 @@ function createWindow () {
     }
   });
 
-  let uri = 'file://' + __dirname + '/index.html';
-    console.log(process.argv)
-  if (process.argv[2] == 'hot') uri = 'http://localhost:3000';
-    console.log(uri)
-    mainWindow.loadURL(uri);
+  // let uri = 'file://' + __dirname + '/index.html';
+  //   console.log(process.argv)
+  // if (process.argv[2] == 'hot') uri = 'http://localhost:3000';
+  //   console.log(uri)
+    // mainWindow.loadURL(uri);
+    mainWindow.loadFile('./index.html');
   mainWindow.once('ready-to-show', () => {
     autoUpdater.checkForUpdatesAndNotify();
   });
   mainWindow.once('show', () => {
       loadingWindow.destroy();
-  })
+  });
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
@@ -70,11 +75,12 @@ function createWindow () {
 
 
 
-app.on('ready', () => {
+app.on('ready', async () => {
+
     createWindow();
 
     if (!app.isPackaged) {
-        mainWindow.webContents.openDevTools()
+        // mainWindow.webContents.openDevTools()
     }
 
     mainWindow.webContents.once('ready-to-show', function ()
