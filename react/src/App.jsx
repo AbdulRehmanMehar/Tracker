@@ -8,6 +8,7 @@ import * as os from 'os';
 import Tracker from "./components/Tracker.jsx";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { enableAXDocumentForJetBrains, enableAXDocumentForVsCode } from './helpers/darwin-config';
+import {verifyHandleInPathOrAddIt} from "./helpers/windows-config";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -35,7 +36,10 @@ export default class App extends React.Component {
     if (os.platform() === 'darwin') {
       await enableAXDocumentForVsCode();
       await enableAXDocumentForJetBrains();
+    } else if (os.platform() === 'win32') {
+      await verifyHandleInPathOrAddIt();
     }
+
   }
 
   makeUpdaterVisible(show) {
