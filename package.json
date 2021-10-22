@@ -44,6 +44,9 @@
       "bundle",
       "!bundle/js/index.js"
     ],
+    "extraResources": [
+      "resources"
+    ],
     "win": {
       "target": [
         "nsis"
@@ -120,6 +123,7 @@
     "node-loader": "^2.0.0",
     "node-notifier": "^10.0.0",
     "node-osascript": "^2.1.0",
+    "node-powershell": "^4.0.0",
     "os": "^0.1.2",
     "path": "^0.12.7",
     "react": "^17.0.2",
